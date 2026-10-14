@@ -1,0 +1,23 @@
+# Render Blueprint: New > Blueprint > pick this repository.
+services:
+  - type: web
+    name: cropmind-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.2
+      - key: MONGODB_URI
+        sync: false          # paste in the Render dashboard
+      - key: MONGODB_DATABASE
+        value: cropmind
+      - key: JWT_SECRET
+        generateValue: true  # Render creates a strong random secret
+      - key: FRONTEND_ORIGINS
+        sync: false          # e.g. https://cropmind.vercel.app
+      - key: ALLOW_RETRAIN
+        value: "false"       # free plan has 512 MB RAM; retrain on a laptop

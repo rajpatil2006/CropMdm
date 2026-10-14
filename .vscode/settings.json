@@ -1,0 +1,7 @@
+{
+  // Every new terminal in this project starts uvicorn on 0.0.0.0, so
+  // "uvicorn main:app --reload --port 8000" is reachable by the ESP32 too.
+  "terminal.integrated.env.windows": {
+    "UVICORN_HOST": "0.0.0.0"
+  }
+}

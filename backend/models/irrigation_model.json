@@ -1,0 +1,116 @@
+{
+  "trained_at": "2026-10-11T20:34:57.422102+00:00",
+  "trained_on": "Real weather + archived forecasts (Open-Meteo, Mar 2024 onward) for 8 Indian locations, replayed through an FAO-56 soil-water balance for FAO-56 and synthetic crops; labels from actual subsequent rainfall",
+  "replay_decisions": 295595,
+  "farm_decisions": 0,
+  "class_counts": {
+    "IRRIGATE": 102969,
+    "WAIT_FOR_RAIN": 1010,
+    "NO_IRRIGATION": 191616
+  },
+  "features": [
+    "depletion_pct",
+    "depletion_vs_raw_pct",
+    "hours_crop_can_wait",
+    "taw_mm",
+    "etc_mm_day",
+    "et0_mm",
+    "kc",
+    "stage_index",
+    "crop_p",
+    "stress_tolerance",
+    "tmax_c",
+    "humidity_pct",
+    "raining_now",
+    "forecast_available",
+    "forecast_rain_24h_mm",
+    "forecast_rain_48h_mm",
+    "hours_until_rain",
+    "month"
+  ],
+  "classes": [
+    "IRRIGATE",
+    "NO_IRRIGATION",
+    "WAIT_FOR_RAIN"
+  ],
+  "evaluation": {
+    "holdout_locations": [
+      "chennai",
+      "kolkata"
+    ],
+    "test_decisions": 73706,
+    "model_accuracy": 0.995,
+    "rule_accuracy": 0.9875,
+    "model_rain_wait": {
+      "decisions_needing_water": 21391,
+      "wrong_wait_crop_stressed": 86,
+      "unneeded_irrigation_rain_came": 265,
+      "correct_waits": 86,
+      "accuracy": 0.9836
+    },
+    "rule_rain_wait": {
+      "decisions_needing_water": 21391,
+      "wrong_wait_crop_stressed": 737,
+      "unneeded_irrigation_rain_came": 186,
+      "correct_waits": 165,
+      "accuracy": 0.9569
+    },
+    "confusion_matrix": {
+      "labels": [
+        "IRRIGATE",
+        "WAIT_FOR_RAIN",
+        "NO_IRRIGATION"
+      ],
+      "matrix": [
+        [
+          20954,
+          86,
+          0
+        ],
+        [
+          265,
+          86,
+          0
+        ],
+        [
+          21,
+          0,
+          52294
+        ]
+      ]
+    },
+    "report": {
+      "IRRIGATE": {
+        "precision": 0.9865348399246704,
+        "recall": 0.9959125475285171,
+        "f1-score": 0.99120151371807,
+        "support": 21040.0
+      },
+      "NO_IRRIGATION": {
+        "precision": 1.0,
+        "recall": 0.9995985854917327,
+        "f1-score": 0.9997992524543777,
+        "support": 52315.0
+      },
+      "WAIT_FOR_RAIN": {
+        "precision": 0.5,
+        "recall": 0.245014245014245,
+        "f1-score": 0.32887189292543023,
+        "support": 351.0
+      },
+      "accuracy": 0.9949529210647708,
+      "macro avg": {
+        "precision": 0.8288449466415568,
+        "recall": 0.7468417926781651,
+        "f1-score": 0.7732908863659594,
+        "support": 73706.0
+      },
+      "weighted avg": {
+        "precision": 0.9937751747756636,
+        "recall": 0.9949529210647708,
+        "f1-score": 0.9941498897673974,
+        "support": 73706.0
+      }
+    }
+  }
+}

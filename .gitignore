@@ -1,0 +1,19 @@
+# Secrets - never commit
+.env
+**/.env
+firmware/cropmind_esp32/secrets.h
+espcode.txt
+
+# Environments and build output
+**/venv/
+**/node_modules/
+frontend/dist/
+**/__pycache__/
+*.pyc
+
+# Regenerable / local data
+backend/data/
+backend/irrigation.db
+
+# Project documents (contain team members' personal details)
+MDM v6.pdf
