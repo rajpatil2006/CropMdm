@@ -17,3 +17,7 @@ backend/irrigation.db
 
 # Project documents (contain team members' personal details)
 MDM v6.pdf
+
+# Presentations and Office lock files
+*.pptx
+~$*

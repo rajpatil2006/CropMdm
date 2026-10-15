@@ -77,14 +77,14 @@ export default function DeviceDashboard({ deviceId, backTo, backLabel }) {
         }
       />
 
+      <LiveReadings deviceId={deviceId} />
+
       <DecisionPanel decision={decision} />
 
       <div className="grid-2">
         <PumpPanel deviceId={deviceId} />
         <CropPanel deviceId={deviceId} onSaved={() => setTick((n) => n + 1)} />
       </div>
-
-      <LiveReadings deviceId={deviceId} />
 
       <div className="grid-2">
         <WeatherPanel weather={weather} />

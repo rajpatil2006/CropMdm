@@ -10,6 +10,8 @@ export function useReasonText() {
     if (params.crop_key) params.crop = cropName(t, has, params.crop_key, params.crop);
     if (params.stage) params.stage = t(`stage.${params.stage}`);
     if (params.action) params.action = t(`action.${params.action}`);
-    return t(`reason.${reason.key}`, params);
+    // "can wait only 0 more hours" reads badly - say it cannot wait
+    const key = reason.key === "water.stressed" && Number(reason.params?.hours) <= 0 ? "water.stressedNow" : reason.key;
+    return t(`reason.${key}`, params);
   };
 }
