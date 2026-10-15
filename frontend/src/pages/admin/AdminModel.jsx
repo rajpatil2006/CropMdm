@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrainCircuit, RefreshCw, Tags } from "lucide-react";
+import { BrainCircuit, Download, RefreshCw } from "lucide-react";
 import api, { errorMessage } from "../../api";
 import { Alert, Badge, EmptyState, PageHeader, Panel, Row, StatCard } from "../../components/ui";
 import usePolling from "../../hooks/usePolling";
@@ -25,14 +25,31 @@ export default function AdminModel() {
     [reload, running]
   );
 
-  async function labelFarmData() {
+  async function downloadTrainingData() {
     setBusy(true);
+    setMessage({ tone: "info", text: "Preparing the Excel file (about 34 MB)…" });
     try {
-      const r = await api.post("/api/admin/model/label-farm-data");
-      setMessage({ tone: "success", text: `Labelled ${r.data.labelled} new farm decisions (${r.data.skipped} skipped). Total farm labels: ${r.data.total_farm_labels}.` });
-      setReload((n) => n + 1);
+      const r = await api.get("/api/admin/model/training-data", { responseType: "blob", timeout: 300000 });
+      const url = URL.createObjectURL(r.data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "CropMind_training_data.xlsx";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      setMessage({ tone: "success", text: "Training data downloaded: CropMind_training_data.xlsx" });
     } catch (err) {
-      setMessage({ tone: "error", text: errorMessage(err) });
+      // Errors arrive as a blob too; read the server's message out of it
+      let text = errorMessage(err);
+      if (err.response?.data instanceof Blob) {
+        try {
+          text = JSON.parse(await err.response.data.text()).detail ?? text;
+        } catch {
+          // keep the generic message
+        }
+      }
+      setMessage({ tone: "error", text });
     } finally {
       setBusy(false);
     }
@@ -71,7 +88,9 @@ export default function AdminModel() {
         subtitle="Random Forest irrigation model with SHAP explanations."
         actions={
           <>
-            <button className="btn btn-ghost" onClick={labelFarmData} disabled={busy}><Tags size={16} /> Label farm data</button>
+            <button className="btn btn-ghost" onClick={downloadTrainingData} disabled={busy}>
+              <Download size={16} /> {busy ? "Downloading…" : "Download training data (Excel)"}
+            </button>
             <button className="btn btn-primary" onClick={retrain} disabled={running}>
               <RefreshCw size={16} className={running ? "spin" : ""} /> {running ? "Retraining…" : "Retrain model"}
             </button>
@@ -98,8 +117,9 @@ export default function AdminModel() {
           <Row label="Classes" value={model.classes?.join(", ")} />
           <p className="note">{model.trained_on}.</p>
           <p className="note">
-            Farm labels come from decisions older than 48 h, judged by what the soil sensor and real rainfall showed
-            afterwards. Label them, then retrain to include them (each counts 20× a replayed decision).
+            The Excel file holds every row the model was trained on: city, date, crop, all 18 features, the rain that
+            really fell and the correct action, plus a README of each column and the evaluation. Farm decisions are
+            labelled automatically 48 h later and included when the model is retrained (each counts 20× a replayed row).
           </p>
         </Panel>
 

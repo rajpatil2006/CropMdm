@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Literal, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi.responses import FileResponse
 from pymongo import DESCENDING
 
 from core import audit, db
@@ -14,6 +15,7 @@ from routers.auth import public_user
 from schemas import DeviceCreate, DeviceUpdate
 from services import farm_service as farm
 from services.model_service import model_service
+from export_training_data import EXCEL_PATH
 from xai import FEATURE_KEYS
 
 router = APIRouter(prefix="/api/admin", tags=["admin"], dependencies=[Depends(admin_user)])
@@ -190,6 +192,17 @@ def label_farm_data(admin=Depends(admin_user)):
     totals["total_farm_labels"] = db.training_labels.count_documents({})
     audit.record(admin, "label_farm_data", details=totals)
     return totals
+
+
+@router.get("/model/training-data")
+def training_data(admin=Depends(admin_user)):
+    """Excel workbook of exactly the data the current model was trained on."""
+    if not os.path.exists(EXCEL_PATH):
+        raise HTTPException(status.HTTP_404_NOT_FOUND,
+                            "Training data file not found. Run `python export_training_data.py` and redeploy.")
+    audit.record(admin, "download_training_data")
+    return FileResponse(EXCEL_PATH, filename="CropMind_training_data.xlsx",
+                        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
 
 @router.post("/model/retrain", status_code=202)

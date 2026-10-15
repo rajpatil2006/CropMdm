@@ -141,6 +141,10 @@ def train(refresh=False, label_farm=False, use_farm=False):
     }
     with open(META_PATH, "w") as f:
         json.dump(meta, f, indent=2)
+
+    # Downloadable copy of exactly this training data (admin dashboard)
+    from export_training_data import export
+    print("Training data workbook:", export(rows, farm_rows, meta))
     print(f"Saved model to {MODEL_PATH}")
     return final, meta
 

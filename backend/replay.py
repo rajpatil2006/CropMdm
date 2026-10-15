@@ -194,7 +194,12 @@ def replay_location(data, rng, n_seasons):
                 # What a forecast-trusting rule would have done (baseline for evaluation)
                 rule_state = {**feats, **ws, "depletion_mm": dr_h, "crop_name": crop["name"],
                               "stage": stage["stage"], "rain_probability_pct": 100}
-                rows.append((feats, label, rule_decision(rule_state)["action"], data["name"]))
+                # Descriptive extras for the downloadable training sheet (do not affect training)
+                info = {
+                    "date": days[d], "hour": h, "crop": crop["name"], "stage": stage["stage"],
+                    "actual_rain_48h_mm": round(sum(future_rain), 2),
+                }
+                rows.append((feats, label, rule_decision(rule_state)["action"], data["name"], info))
 
             # Advance the soil-water balance to the next day
             if dr_h >= ws_trigger(dr_h, taw, crop, etc, trigger_into_band):
