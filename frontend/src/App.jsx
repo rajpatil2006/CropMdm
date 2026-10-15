@@ -6,7 +6,6 @@ import AccountPage from "./pages/AccountPage";
 import AdminDevices from "./pages/admin/AdminDevices";
 import AdminFarmers from "./pages/admin/AdminFarmers";
 import AdminHealth from "./pages/admin/AdminHealth";
-import AdminModel from "./pages/admin/AdminModel";
 import AdminOverview from "./pages/admin/AdminOverview";
 import DevicePage from "./pages/DevicePage";
 import FarmerHome from "./pages/farmer/FarmerHome";
@@ -42,7 +41,6 @@ export default function App() {
           <Route path="/admin/farmers" element={<AdminFarmers />} />
           <Route path="/admin/devices" element={<AdminDevices />} />
           <Route path="/admin/devices/:deviceId" element={<DevicePage />} />
-          <Route path="/admin/model" element={<AdminModel />} />
           <Route path="/admin/health" element={<AdminHealth />} />
         </Route>
       </Route>

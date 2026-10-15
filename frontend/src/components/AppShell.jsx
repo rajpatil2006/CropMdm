@@ -2,7 +2,6 @@ import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   Activity,
-  BrainCircuit,
   Cpu,
   LayoutDashboard,
   LogOut,
@@ -22,7 +21,6 @@ function navFor(role, t) {
       { to: "/admin", label: "Overview", icon: LayoutDashboard, end: true },
       { to: "/admin/farmers", label: "Farmers", icon: Users },
       { to: "/admin/devices", label: "Devices", icon: Cpu },
-      { to: "/admin/model", label: "AI model", icon: BrainCircuit },
       { to: "/admin/health", label: "Health & logs", icon: Activity },
       { to: "/account", label: "My account", icon: UserCircle },
     ];
